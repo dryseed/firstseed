@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.dao.mysql.UserMapper">
+
+    <!--做返回结果映射,添加了resultMap之后,在select中就可以将resultMap指定为userResultMap,结果会映射为对象-->
+    <resultMap id="userResultMap" type="User">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+    </resultMap>
+
+    <sql id="select_statement">
+        select
+            u.id,
+            u.name,
+            u.password
+        from user
+    </sql>
+
+    <select id="fetchById" parameterType="java.lang.Object" resultMap="userResultMap">
+        <include refid="select_statement"/>
+        and t.id = #{id}
+    </select>
+
+    <insert id="save" parameterType="User">
+        insert into user(name,password)
+        values(#{name},#{password})
+    </insert>
+
+    <update id="update" parameterType="User">
+        update user
+        <trim prefix="set" suffix="where id = #{id}" suffixOverrides=",">
+            <if test="name != null">name=#{name},</if>
+            <if test="password != null">password=#{password},</if>
+        </trim>
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Object">
+        delete from user where id = #{id};
+    </delete>
+
+</mapper>
