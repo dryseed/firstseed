@@ -8,7 +8,7 @@
   <title>Dashboard - NiceAdmin Bootstrap Template</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
-  <div th:include=" common :: com-header"></div>
+  <link th:include="common::com-header">
 
 </head>
 
@@ -23,7 +23,7 @@
       <h1>Dashboard</h1>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a th:href="@{index.html}">Home</a></li>
+          <li class="breadcrumb-item"><a th:href="@{main.html}">Home</a></li>
           <li class="breadcrumb-item active">Dashboard</li>
         </ol>
       </nav>

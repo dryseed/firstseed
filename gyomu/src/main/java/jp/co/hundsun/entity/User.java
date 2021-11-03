@@ -1,2 +1,14 @@
-package jp.co.hundsun.entity;public class User {
+package jp.co.hundsun.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class User {
+    private Integer id;
+    private String name;
+    private String password;
 }
