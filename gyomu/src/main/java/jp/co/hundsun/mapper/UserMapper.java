@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public interface UserMapper {
 
-    User fetchById(Integer id);
+    User selectUserByUserCode(String code);
 
 }

@@ -14,8 +14,8 @@ public class UserMapperImpl  implements UserMapper {
     UserMapper userMapper;
 
     @Override
-    public User fetchById(Integer id) {
-        return userMapper.fetchById(id);
+    public User selectUserByUserCode(String code) {
+        return userMapper.selectUserByUserCode(code);
     }
 
 

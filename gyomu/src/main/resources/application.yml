@@ -1,7 +1,7 @@
 server:
   port: 8080
 
-
+# Mysql８以上の場合、urlの設定には下記属性設定する必要
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/gyomukanri?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true

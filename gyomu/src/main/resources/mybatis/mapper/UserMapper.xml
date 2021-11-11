@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="jp.co.hundsun.mapper.UserMapper">
 
-    <select id="fetchById" resultType="jp.co.hundsun.entity.User">
-        select * from User where id = #{id}
+    <select id="selectUserByUserCode" resultType="jp.co.hundsun.entity.User">
+        select * from user where user_code  = #{code}
     </select>
 
 </mapper>

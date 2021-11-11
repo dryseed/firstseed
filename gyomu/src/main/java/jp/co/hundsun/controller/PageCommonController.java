@@ -8,22 +8,26 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class PageCommonController {
+    Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    UserMapperImpl userService;
+
+
 
     @GetMapping({"/login","/"})
     public String toLogin(){
-
+        logger.info("=======login============");
         return "account/login";
     }
 
@@ -34,22 +38,24 @@ public class PageCommonController {
     }
 
 
-    @RequestMapping(value = "/doLogin",method = RequestMethod.POST)
+    @PostMapping(value = "/login")
     public String doLogin(String username , String password, Model model){
-        //User lisi = userService.fetchById(4);
-        //System.out.println("test result" + lisi);
-        
+
+        logger.info("=======doLogin============");
         Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken("11", "123456");
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 
         try{
             subject.login(token);
+            logger.info("=======doLogin: go to  main  ============");
             return "main";
         }catch (UnknownAccountException e){
             model.addAttribute("msg","is not exist!");
+            logger.info("=======doLogin: is not exist! ============");
             return "account/login";
         }catch(IncorrectCredentialsException e){
             model.addAttribute("msg","password is not correct !");
+            logger.info("=======doLogin: password is not correct !============");
             return "account/login";
         }
 

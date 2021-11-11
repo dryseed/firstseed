@@ -1,5 +1,7 @@
 package jp.co.hundsun.config.shiroconfig;
 
+import jp.co.hundsun.entity.User;
+import jp.co.hundsun.service.UserMapperImpl;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -7,6 +9,7 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,6 +17,10 @@ import java.util.Map;
 import java.util.Set;
 
 public class MyRealm extends AuthorizingRealm {
+
+    @Autowired
+    UserMapperImpl userService;
+
     /**
      * 授权
      *
@@ -38,37 +45,22 @@ public class MyRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-
+        if(token==null){
+            return null;
+        }
         String username = token.getUsername();
-        Map<String, Object> userInfo = getUserInfo(username);
-        if (userInfo == null) {
+        User currentUser = userService.selectUserByUserCode(username);
+        if (currentUser == null) {
+            // user is not exist
             throw new UnknownAccountException();
         }
 
         //盐值，此处使用用户名作为盐
-        ByteSource salt = ByteSource.Util.bytes(username);
-
-        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(username, userInfo.get("password"), salt, getName());
+        ByteSource salt = ByteSource.Util.bytes(currentUser.getUserCode());
+        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(currentUser.getUserCode(), currentUser.getUserPswd(), salt, getName());
         return authenticationInfo;
     }
 
-    /*
-     * 模拟数据库查询，通过用户名获取用户信息
-     *
-     * @param username
-     * @return
-     */
-    private Map<String,Object> getUserInfo(String username) {
-        Map<String, Object> userInfo = null;
-        if ("zhangsan".equals(username)) {
-            userInfo = new HashMap<>();
-            userInfo.put("username", "zhangsan");
-
-            //加密算法，原密码，盐值，加密次数
-            userInfo.put("password", new SimpleHash("MD5", "123456", username, 3));
-        }
-        return userInfo;
-    }
 
     /**
      * 模拟查询数据库，获取用户角色列表
